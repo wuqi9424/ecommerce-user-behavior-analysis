@@ -50,3 +50,80 @@ SELECT
 FROM user_behavior_clean
 GROUP BY date
 ORDER BY date;
+
+-- 6. Raw behavior type validation
+SELECT
+    behavior_type,
+    COUNT(*) AS behavior_count
+FROM raw_user_behavior
+GROUP BY behavior_type
+ORDER BY behavior_count DESC;
+
+
+-- 7. Exact duplicate record check
+SELECT
+    COUNT(*) AS duplicate_groups,
+    SUM(record_count - 1) AS duplicate_rows
+FROM (
+    SELECT
+        user_id,
+        item_id,
+        category_id,
+        behavior_type,
+        timestamp,
+        COUNT(*) AS record_count
+    FROM user_behavior_clean
+    GROUP BY
+        user_id,
+        item_id,
+        category_id,
+        behavior_type,
+        timestamp
+    HAVING COUNT(*) > 1
+);
+
+-- 8. Inspect exact duplicate records
+SELECT
+    user_id,
+    item_id,
+    category_id,
+    behavior_type,
+    timestamp,
+    event_time,
+    COUNT(*) AS record_count
+FROM user_behavior_clean
+GROUP BY
+    user_id,
+    item_id,
+    category_id,
+    behavior_type,
+    timestamp,
+    event_time
+HAVING COUNT(*) > 1
+ORDER BY record_count DESC, event_time
+LIMIT 100;
+
+
+-- 9. Duplicate records by behavior type
+SELECT
+    behavior_type,
+    SUM(record_count - 1) AS duplicate_rows
+FROM (
+    SELECT
+        user_id,
+        item_id,
+        category_id,
+        behavior_type,
+        timestamp,
+        COUNT(*) AS record_count
+    FROM user_behavior_clean
+    GROUP BY
+        user_id,
+        item_id,
+        category_id,
+        behavior_type,
+        timestamp
+    HAVING COUNT(*) > 1
+)
+GROUP BY behavior_type
+ORDER BY duplicate_rows DESC;

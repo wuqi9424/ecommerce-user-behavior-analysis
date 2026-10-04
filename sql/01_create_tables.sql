@@ -40,3 +40,28 @@ WHERE timestamp BETWEEN
     AND
     epoch(TIMESTAMPTZ '2017-12-03 23:59:59+08:00')
 AND behavior_type IN ('pv', 'fav', 'cart', 'buy');
+
+-- Remove exact duplicate events.
+-- Assumption:
+-- Rows with identical user, item, category, behavior and timestamp
+-- are treated as duplicate event logs and only one is retained.
+
+DELETE FROM user_behavior_clean
+WHERE rowid IN (
+    SELECT rowid
+    FROM (
+        SELECT
+            rowid,
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    user_id,
+                    item_id,
+                    category_id,
+                    behavior_type,
+                    timestamp
+                ORDER BY rowid
+            ) AS rn
+        FROM user_behavior_clean
+    )
+    WHERE rn > 1
+);
