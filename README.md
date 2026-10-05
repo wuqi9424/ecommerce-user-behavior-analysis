@@ -275,10 +275,10 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m ipykernel install --user --name python3 --display-name "Python 3"
-mkdir -p data/raw data/processed
+python -c "from pathlib import Path; [Path(p).mkdir(parents=True, exist_ok=True) for p in ('data/raw', 'data/processed')]"
 ```
 
-Windows 的虚拟环境激活命令为 `.venv\Scripts\activate`。从来源页面取得并解压无表头 `UserBehavior.csv`，放在 `data/raw/`。原始数据约 3.4 GB，当前数据库约 1.3 GB；清洗去重和聚合还需额外内存与临时磁盘空间，初次构建耗时取决于机器配置。
+Windows 的虚拟环境激活命令为 `.venv\Scripts\activate`。 macOS 若 pip 提示证书校验失败，应先修复 Python 的 CA 配置；本次验证使用 `python -m pip install --cert /etc/ssl/cert.pem -r requirements.txt` 保持 TLS 校验完成安装，不建议关闭证书校验。从来源页面取得并解压无表头 `UserBehavior.csv`，放在 `data/raw/`。原始数据约 3.4 GB，当前数据库约 1.3 GB；清洗去重和聚合还需额外内存与临时磁盘空间，初次构建耗时取决于机器配置。
 
 ### SQL 执行顺序
 
@@ -288,10 +288,10 @@ Windows 的虚拟环境激活命令为 `.venv\Scripts\activate`。从来源页�
 python run_pipeline.py --skip-build  # SQL 02–09，只读连接
 python run_pipeline.py --start 7     # 仅运行 SQL 07–09
 python run_pipeline.py --only 9      # 仅运行增长拆解
-# 首次构建：python run_pipeline.py   # SQL 01–09
+python run_pipeline.py               # 首次构建：SQL 01–09，会重建清洗表
 ```
 
-入口按编号执行，显示开始时间、状态、耗时与最终汇总；SQL 报错或明确的 invalid_rows 检查非零会停止。SELECT 仅预览 20 行，检查结果完整读取。SQL 02 的原始数据检查仍需 CSV；仅运行 03–09 可使用现有数据库。顺序为质量检查 → 平台与用户分析 → 实验模拟 → 下一轮机会识别 → 增长拆解；入口不执行 Notebook。
+SQL 结果显示在终端，不自动导出 CSV；如需保存日志，可使用 `python run_pipeline.py --skip-build > pipeline.log 2>&1`（日志无需提交）。入口按编号执行，显示开始时间、状态、耗时与最终汇总；SQL 报错或明确的 invalid_rows 检查非零会停止。SELECT 仅预览 20 行，检查结果完整读取。SQL 02 的原始数据检查仍需 CSV；仅运行 03–09 可使用现有数据库。顺序为质量检查 → 平台与用户分析 → 实验模拟 → 下一轮机会识别 → 增长拆解；入口不执行 Notebook。
 
 ### Notebook 执行
 

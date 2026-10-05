@@ -55,7 +55,10 @@ data/
 2. 在 `data/processed/ecommerce.duckdb` 上运行 [01_create_tables.sql](../sql/01_create_tables.sql)。它创建原始 CSV 视图，转换时间、过滤分析范围与行为类型，并对完全相同日志去重。**该步骤会重建清洗表。**
 3. 运行 [02_data_quality_checks.sql](../sql/02_data_quality_checks.sql)，检查规模、时间范围、缺失、行为类型与重复记录；其中原始数据检查仍依赖 CSV。
 4. 运行 SQL [03 平台分析](../sql/03_platform_overview.sql)、[04 转化漏斗](../sql/04_conversion_funnel.sql)、[05 留存与重复购买](../sql/05_retention_repeat_behavior.sql)、[06 用户分层](../sql/06_user_segmentation.sql)。这些分析模块不修改源表。
-5. 执行 [用户分层可视化 Notebook](../notebooks/05_user_segmentation_visualization.ipynb)。它以只读连接复现 SQL 06 并校验人数；若数据版本不同导致校验失败，应先定位差异，不直接移除断言。
+5. 运行 [07 实验设计模拟](../sql/07_ab_test_design.sql)、[08 用户 × 品类机会](../sql/08_growth_opportunity_analysis.sql)、[09 增长来源拆解](../sql/09_growth_decomposition.sql)。SQL 08 服务下一轮实验，不能用于 SQL 07 的历史选人。
+6. 执行 [用户分层可视化 Notebook](../notebooks/05_user_segmentation_visualization.ipynb)。它以只读连接复现 SQL 06 并校验人数；若数据版本不同导致校验失败，应先定位差异，不直接移除断言。
+
+完整首次构建可运行 `python run_pipeline.py`；已有数据库使用 `python run_pipeline.py --skip-build`。单模块示例为 `python run_pipeline.py --only 9`。入口自动创建 processed 目录，SQL 结果与执行状态显示在终端；Notebook 图表写入 `reports/figures/`。另可独立运行 [模拟实验评估 Notebook](../notebooks/07_ab_test_evaluation.ipynb)。
 
 完全重复日志的去重属于分析假设，不意味着同一用户的所有重复行为都应删除。
 
