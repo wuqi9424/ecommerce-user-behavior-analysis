@@ -7,3 +7,15 @@ __pycache__/
 .env
 *.duckdb
 *.duckdb.wal
+
+# Local environments, caches and credentials
+.venv/
+venv/
+.pytest_cache/
+.jupyter/
+.env.*
+*.pem
+*.key
+
+# Generated analysis spill files
+*.duckdb.tmp/
