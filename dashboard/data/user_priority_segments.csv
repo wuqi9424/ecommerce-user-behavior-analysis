@@ -1,0 +1,4 @@
+priority_segment,segment_definition,user_category_pairs,distinct_users,avg_pv,avg_fav,avg_cart,recommended_strategy
+P1,Recent cart; no nine-day buy in target category,658968,349857,5.4258,0.0939,1.3926,Cart recall / benefit-price reminder
+P2,No recent cart; recent favorite; no nine-day buy in target category,294766,150101,4.7195,1.4295,0.0,Favorite reminder / content reinforcement
+P3,No recent cart/favorite; recent PV at or above browse-only Q75; no nine-day buy in target category,1629056,621772,4.3155,0.0,0.0,Recommendation / interest cultivation
