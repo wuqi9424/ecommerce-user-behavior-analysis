@@ -97,6 +97,8 @@ flowchart TD
 
 比较 **11/25–11/26** 与 **12/02–12/03** 两个等长周末，日均浏览用户从 **691,411** 增至 **937,907**，日均购买用户从 **134,335** 增至 **173,856**；每日浏览→购买比例均值却从 **18.2785%** 降至 **17.1709%**。购买人数增加与比例下降可以同时成立，说明应同时关注流量规模和购买承接，不能据此归因于某项活动或流程问题。
 
+[增长拆解](sql/09_growth_decomposition.sql)进一步发现：两天去重活跃用户 **864,829 → 986,594（+14.08%）**，总事件 **+30.14%**，两天人均事件 **24.38 → 27.81（+14.08%）**，属于规模与强度共同增长。Final weekend 首次观测用户仅 **19 人**，不等于真实新增注册用户。这里的人数为两天去重，与上面的日均口径不同；固定“先规模、后强度”的 bridge 是描述性分解，不能判断渠道或活动贡献。
+
 ## 5. 转化漏斗分析
 
 [漏斗 SQL](sql/04_conversion_funnel.sql) 区分两种口径：
@@ -234,6 +236,7 @@ flowchart TD
 ```text
 .
 ├── README.md
+├── run_pipeline.py               # 统一 SQL 运行入口
 ├── requirements.txt
 ├── .gitignore
 ├── data/
@@ -248,7 +251,8 @@ flowchart TD
 │   ├── 05_retention_repeat_behavior.sql # 留存、购买日期与间隔
 │   ├── 06_user_segmentation.sql    # RF + 行为特征分层
 │   ├── 07_ab_test_design.sql       # 历史分组模拟、平衡与结果
-│   └── 08_growth_opportunity_analysis.sql # 用户 × 品类机会池
+│   ├── 08_growth_opportunity_analysis.sql # 用户 × 品类机会池
+│   └── 09_growth_decomposition.sql # 用户规模与人均强度拆解
 ├── notebooks/
 │   ├── 05_user_segmentation_visualization.ipynb
 │   └── 07_ab_test_evaluation.ipynb
@@ -278,28 +282,16 @@ Windows 的虚拟环境激活命令为 `.venv\Scripts\activate`。从来源页�
 
 ### SQL 执行顺序
 
-数据准备见 [data/README.md](data/README.md)。先执行 01 构建数据库，再执行 02 检查质量、03–06 分析平台与用户、07 演示实验设计、08 识别下一轮运营机会。**01 会重建清洗表，后续分析不修改源表。** 02 的部分检查依赖原始 CSV，不能仅凭数据库运行所有原始数据检查。以下脚本在终端执行，可逐条打印结果（用户明细预览最多 20 行）：
+数据准备见 [data/README.md](data/README.md)。首次构建需运行 SQL 01；**01 会重建清洗表**。已有数据库日常复现推荐跳过构建：
 
 ```bash
-python - <<'PY'
-from pathlib import Path
-import duckdb
-
-files = sorted(Path('sql').glob('*.sql'))
-for path in files:
-    print(f'\n执行 {path.name}')
-    with duckdb.connect('data/processed/ecommerce.duckdb',
-                        read_only=path.name != '01_create_tables.sql') as con:
-        con.execute("SET memory_limit='3GB'")
-        con.execute('SET threads=4')
-        for statement in con.extract_statements(path.read_text()):
-            result = con.execute(statement)
-            if statement.type == duckdb.StatementType.SELECT:
-                print(result.fetchdf().to_string(index=False))
-PY
+python run_pipeline.py --skip-build  # SQL 02–09，只读连接
+python run_pipeline.py --start 7     # 仅运行 SQL 07–09
+python run_pipeline.py --only 9      # 仅运行增长拆解
+# 首次构建：python run_pipeline.py   # SQL 01–09
 ```
 
-已有数据库且仅重跑分析时，把 `files` 改为从 02 开始；只跑画像可直接执行下面的 Notebook。
+入口按编号执行，显示开始时间、状态、耗时与最终汇总；SQL 报错或明确的 invalid_rows 检查非零会停止。SELECT 仅预览 20 行，检查结果完整读取。SQL 02 的原始数据检查仍需 CSV；仅运行 03–09 可使用现有数据库。顺序为质量检查 → 平台与用户分析 → 实验模拟 → 下一轮机会识别 → 增长拆解；入口不执行 Notebook。
 
 ### Notebook 执行
 
