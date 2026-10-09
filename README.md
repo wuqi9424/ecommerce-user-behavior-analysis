@@ -11,6 +11,12 @@ E-commerce User Behavior Analysis
 
 **业务主线：**发现流量上涨与漏斗比例下降 → 找到高意向未购买用户 → 定位承接偏弱品类 → 构建用户 × 品类机会池 → 按 P1/P2/P3 选择策略 → 设计真实实验验证。现有 A/B Test 为历史数据分组模拟，没有真实触达或已验证的策略效果。
 
+## 三个关键业务发现
+
+- **高活跃未购买：**105,478 人，其中 **90.01%** 有收藏或加购行为；值得进一步调查兴趣到购买之间的障碍，不能保证未来会购买。
+- **购买沉寂不等于流失：**购买沉寂群体中 **97.67%** 在最后一天仍然活跃，不能仅凭购买新近度将其定义为流失用户。
+- **窗口内跨日重复购买：**占购买用户 **55.07%**；只表示九天内至少两个日期发生购买，不是长期复购率。
+
 ## AI Analytics Copilot
 
 将可复现业务分析接入受控问答：模型选择白名单工具，数字回答通过 numeric grounding，
@@ -37,19 +43,16 @@ E-commerce User Behavior Analysis
 
 ![AI Analytics Copilot：真实 Streamlit 分析页面](docs/assets/analytics_copilot_demo.png)
 
-## 三个关键业务发现
-
-- **高活跃未购买：**105,478 人，其中 **90.01%** 有收藏或加购行为；值得进一步调查兴趣到购买之间的障碍，不能保证未来会购买。
-- **购买沉寂不等于流失：**购买沉寂群体中 **97.67%** 在最后一天仍然活跃，不能仅凭购买新近度将其定义为流失用户。
-- **窗口内跨日重复购买：**占购买用户 **55.07%**；只表示九天内至少两个日期发生购买，不是长期复购率。
-
 ## 技术栈
 
 - **SQL / DuckDB**：大表聚合、条件计数、窗口函数、分位点分层与一致性检查。
 - **Python / Pandas / NumPy**：用户特征读取、结果核对和群体画像。
 - **Matplotlib / Seaborn**：中文图表、聚合热力图与分指标比较。
 - **Jupyter Notebook**：保存可直接阅读的代码、图表与中文解释。
-- **Git**：项目版本管理；目录与相对链接适合 GitHub 展示。
+- **BI 聚合数据**：导出六份 CSV，供 Power BI / Tableau 导入；仓库不含已完成的 BI 报表文件。
+- **Streamlit**：本地 AI Analytics Copilot 展示，原生浅色主题。
+- **OpenAI Responses API / Controlled Tool Calling（Function Calling）**：模型选择白名单 read-only analytics tools，不开放任意 SQL。
+- **Numeric grounding / Boundary Checks**：核验数字来源与计算，并检查部分明确的数据边界断言；不保证所有语义正确。
 
 ## 分析流程
 
@@ -61,14 +64,19 @@ flowchart TD
     D --> E[用户 × 品类机会识别]
     E --> F[运营策略：P1 / P2 / P3]
     F --> G[A/B Test 设计与统计评估模拟]
-    G --> H[下一步：真实线上实验验证]
+    G -.-> H[下一步：真实线上实验验证]
+    G --> I[业务分析结果]
+    I --> J[Controlled Analytics Tools]
+    J --> K[LLM Tool Calling]
+    K --> L[Numeric Grounding / Boundary Checks]
+    L --> M[Streamlit Demo]
 ```
+
+AI 是已有 SQL 分析成果之上的应用层，复用固定查询和只读工具，不替代原始业务分析；真实线上实验仍是后续验证计划。
 
 **业务决策案例：**[从流量增长到运营实验](reports/business_case.md)完整展示如何从“周末流量增长但购买承接不足”出发，定位用户和品类机会，并设计实验验证策略。
 
 阅读导航：[数据准备](data/README.md) · [项目总结](reports/project_summary.md) · [分层画像 Notebook](notebooks/05_user_segmentation_visualization.ipynb) · [实验评估 Notebook](notebooks/07_ab_test_evaluation.ipynb) · [项目限制](#10-项目限制) · [复现方式](#12-如何运行)
-
-**AI Analytics Agent：**[模块说明](ai_agent/README.md)介绍冻结 deterministic baseline、独立 controlled tool calling 与只读工具；[LLM provider](ai_agent/providers/openai_responses.py)、[离线 evaluator v2 说明](ai_agent/evals/llm_evaluation_v2_README.md)和[首次运行的探索性复评报告](ai_agent/evals/llm_evaluation_v2_report.md)提供实现与评估证据。V2 是事后建立的评估视图，其 case pass rate 不代表通用模型准确率。
 
 ## 1. 业务背景与问题
 
@@ -264,31 +272,63 @@ flowchart TD
 ```text
 .
 ├── README.md
-├── run_pipeline.py               # 统一 SQL 运行入口
-├── requirements.txt
+├── run_pipeline.py               # SQL 01–09 运行入口
+├── requirements.txt              # 数据分析依赖
+├── requirements-ui.txt           # 可选 Streamlit 依赖
 ├── .gitignore
+├── .streamlit/config.toml         # 原生浅色主题
 ├── data/
 │   ├── README.md                  # 数据下载与准备说明
-│   ├── raw/UserBehavior.csv        # 本地数据，不上传
-│   └── processed/ecommerce.duckdb
+│   ├── raw/                       # 本地原始数据，不上传
+│   └── processed/                 # 本地 DuckDB，不上传
 ├── sql/
-│   ├── 01_create_tables.sql        # 原始视图、时间清洗、日志去重
-│   ├── 02_data_quality_checks.sql  # 规模、缺失、类型、重复检查
-│   ├── 03_platform_overview.sql    # 活跃、事件与时间分布
-│   ├── 04_conversion_funnel.sql    # 集合/严格顺序漏斗与等长周末对比
-│   ├── 05_retention_repeat_behavior.sql # 留存、购买日期与间隔
-│   ├── 06_user_segmentation.sql    # RF + 行为特征分层
-│   ├── 07_ab_test_design.sql       # 历史分组模拟、平衡与结果
-│   ├── 08_growth_opportunity_analysis.sql # 用户 × 品类机会池
-│   └── 09_growth_decomposition.sql # 用户规模与人均强度拆解
+│   ├── 01_create_tables.sql
+│   ├── 02_data_quality_checks.sql
+│   ├── 03_platform_overview.sql
+│   ├── 04_conversion_funnel.sql
+│   ├── 05_retention_repeat_behavior.sql
+│   ├── 06_user_segmentation.sql
+│   ├── 07_ab_test_design.sql
+│   ├── 08_growth_opportunity_analysis.sql
+│   └── 09_growth_decomposition.sql
 ├── notebooks/
 │   ├── 05_user_segmentation_visualization.ipynb
 │   └── 07_ab_test_evaluation.ipynb
-└── reports/
-    ├── project_summary.md         # 项目分析总结
-    ├── business_case.md           # 业务诊断与运营决策案例
-    └── figures/                   # 用户画像与实验评估图表
+├── dashboard/
+│   ├── README.md                  # BI 数据口径与导入说明
+│   ├── export_bi_data.py           # 只读聚合导出
+│   └── data/                      # 六份公开聚合 CSV
+│       ├── daily_metrics.csv
+│       ├── weekend_comparison.csv
+│       ├── funnel_comparison.csv
+│       ├── user_priority_segments.csv
+│       ├── opportunity_categories.csv
+│       └── ab_test_summary.csv
+├── reports/
+│   ├── project_summary.md
+│   ├── business_case.md
+│   └── figures/                   # 11 张用户画像与模拟实验图表
+├── ai_agent/
+│   ├── README.md
+│   ├── agent.py                   # 冻结 deterministic baseline
+│   ├── llm_agent.py               # 受控 LLM 入口
+│   ├── llm_grounding.py
+│   ├── tool_schemas.py            # 白名单工具与参数契约
+│   ├── streamlit_app.py           # 展示层，复用 llm_agent.run
+│   ├── prompts/                   # 系统提示词
+│   ├── providers/                 # OpenAI Responses API 适配器
+│   ├── tools/                     # read-only analytics tools
+│   ├── reasoning/                 # deterministic 解释规则
+│   └── evals/                     # Golden、离线 tests、legacy / v2 评估与报告
+├── docs/
+│   └── assets/
+│       ├── README.md
+│       └── analytics_copilot_demo.png
+└── scripts/
+    └── start_agent_ui.sh
 ```
+
+以上为主要文件导航；`data/raw/` 和 `data/processed/` 是本地准备目录，其余列出的文件及目录均有 Git 跟踪内容。
 
 SQL 与 Notebook 编号分别表示各自目录的顺序：Notebook 05 对应 SQL 06 的可视化，不代表缺少 Notebook 01–04。
 
@@ -340,6 +380,19 @@ PY
 ```
 
 也可在支持 Jupyter 的编辑器中从头执行。中文字体需使用 Noto Sans CJK SC、微软雅黑、苹方或 Notebook 支持的其他字体；缺少字体时会停止。输出图像写入 `reports/figures/`，Notebook 保留执行结果，GitHub 阅读不依赖本地数据库。
+
+### AI Analytics Agent CLI
+
+已有 DuckDB 数据库就绪后，从项目根目录运行：
+
+```bash
+source .venv/bin/activate
+# 在当前环境安全设置 OPENAI_API_KEY 和 OPENAI_MODEL；不要写入源码。
+python -m ai_agent.llm_agent "为什么第二个周末流量增长了？"
+```
+
+CLI 与 UI 复用 `llm_agent.run`，真实提问会请求 OpenAI API；CLI 不需要 Streamlit 依赖。
+[Agent 文档](ai_agent/README.md)和[离线 evaluator v2 说明](ai_agent/evals/llm_evaluation_v2_README.md)提供架构、测试与评估细节。
 
 ## 本地 AI Copilot 展示界面
 
