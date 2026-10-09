@@ -1,0 +1,645 @@
+{
+  "schema_version": 2,
+  "view": "Independent task-scoped architecture view; original Golden unchanged",
+  "notes": [
+    "Exact set metrics remain strict; overall allows explicitly declared auxiliary intents/tools.",
+    "Numeric facts require the requested field in grounded answer prose; original Golden display precision is scored separately, not waived.",
+    "These profiles are post-run exploratory evaluation, not a new held-out model benchmark."
+  ],
+  "cases": {
+    "direct_01": {
+      "expected_intents": [
+        "platform"
+      ],
+      "expected_tools": [
+        "get_platform_overview"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "users"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_02": {
+      "expected_intents": [
+        "platform"
+      ],
+      "expected_tools": [
+        "get_platform_overview"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "total_events"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_03": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "final_weekend_active_users"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_04": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "opportunity_categories"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_05": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "p1_users"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_06": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "treatment_purchase_rate"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_07": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "p_value"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_08": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "absolute_lift_pp",
+        "ci_lower_pp",
+        "ci_upper_pp",
+        "mde_pp"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "direct_09": {
+      "expected_intents": [
+        "funnel"
+      ],
+      "expected_tools": [
+        "get_funnel_comparison"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "previous_pv_to_buy_rate",
+        "final_pv_to_buy_rate"
+      ],
+      "semantic_facts": [],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_01": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "scale_intensity"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_02": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "scale_intensity"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_03": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "scale_intensity"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_04": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "scale_intensity"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_05": {
+      "expected_intents": [
+        "funnel"
+      ],
+      "expected_tools": [
+        "get_funnel_comparison"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "daily_funnel"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_06": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "top_categories",
+        "anonymous"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "paraphrase_07": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "not_significant",
+        "simulated",
+        "no_exposure",
+        "not_same"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "diagnostic_01": {
+      "expected_intents": [
+        "funnel"
+      ],
+      "expected_tools": [
+        "get_funnel_comparison"
+      ],
+      "optional_tools": [
+        "get_weekend_growth"
+      ],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "absolute_relative"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {},
+      "optional_intents": [
+        "growth"
+      ]
+    },
+    "diagnostic_02": {
+      "expected_intents": [
+        "funnel"
+      ],
+      "expected_tools": [
+        "get_funnel_comparison"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "intent_buy_largest"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "diagnostic_03": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [
+        "get_funnel_comparison"
+      ],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "cart_not_proof"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {},
+      "optional_intents": [
+        "funnel"
+      ]
+    },
+    "diagnostic_04": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "size_not_priority",
+        "priority_signals"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "diagnostic_05": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "priority_signals",
+        "priority_not_probability"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "boundary_01": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_gmv"
+      ],
+      "argument_expectations": {}
+    },
+    "boundary_02": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_income"
+      ],
+      "argument_expectations": {}
+    },
+    "boundary_03": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_channel"
+      ],
+      "argument_expectations": {}
+    },
+    "boundary_04": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_long_repeat"
+      ],
+      "argument_expectations": {}
+    },
+    "boundary_05": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "anonymous"
+      ],
+      "argument_expectations": {}
+    },
+    "boundary_06": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_roi"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_01": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "simulated",
+        "no_exposure",
+        "no_effect"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_02": {
+      "expected_intents": [
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "simulated",
+        "no_exposure",
+        "no_effect",
+        "not_same"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_03": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "no_ad_cause"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_04": {
+      "expected_intents": [
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "priority_not_probability"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_05": {
+      "expected_intents": [
+        "growth"
+      ],
+      "expected_tools": [
+        "get_weekend_growth"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "first_not_registered"
+      ],
+      "argument_expectations": {}
+    },
+    "causal_06": {
+      "expected_intents": [
+        "unsupported"
+      ],
+      "expected_tools": [],
+      "optional_tools": [],
+      "expected_status": "unsupported",
+      "numeric_facts": [],
+      "semantic_facts": [],
+      "boundary_rules": [
+        "inactive_not_churn"
+      ],
+      "argument_expectations": {}
+    },
+    "multi_intent_01": {
+      "expected_intents": [
+        "platform",
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_platform_overview",
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "users",
+        "p_value"
+      ],
+      "semantic_facts": [
+        "simulated",
+        "no_exposure",
+        "not_same"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "multi_intent_02": {
+      "expected_intents": [
+        "growth",
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_weekend_growth",
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "final_weekend_active_users",
+        "opportunity_categories"
+      ],
+      "semantic_facts": [
+        "scale_intensity",
+        "anonymous"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    },
+    "multi_intent_03": {
+      "expected_intents": [
+        "funnel",
+        "opportunity"
+      ],
+      "expected_tools": [
+        "get_funnel_comparison",
+        "get_opportunity_analysis"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [],
+      "semantic_facts": [
+        "intent_buy_largest",
+        "top_categories",
+        "daily_funnel",
+        "anonymous"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {
+        "get_opportunity_analysis": {
+          "top_n": 5
+        }
+      }
+    },
+    "multi_intent_04": {
+      "expected_intents": [
+        "opportunity",
+        "experiment"
+      ],
+      "expected_tools": [
+        "get_opportunity_analysis",
+        "get_ab_test_summary"
+      ],
+      "optional_tools": [],
+      "expected_status": "answered",
+      "numeric_facts": [
+        "p1_users",
+        "p_value"
+      ],
+      "semantic_facts": [
+        "priority_signals",
+        "not_significant",
+        "simulated",
+        "no_exposure",
+        "not_same"
+      ],
+      "boundary_rules": [],
+      "argument_expectations": {}
+    }
+  }
+}

@@ -19,3 +19,7 @@ venv/
 
 # Generated analysis spill files
 *.duckdb.tmp/
+
+# Dynamic LLM tool traces and live evaluation results
+ai_agent/runs/
+ai_agent/evals/llm_results*.json

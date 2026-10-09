@@ -1,0 +1,19 @@
+{
+  "protected_files": {
+    "ai_agent/agent.py": "670a13bf89e30d32bd2158c48270c4d228963bd7a08c774745b6a51b2da321fe",
+    "ai_agent/reasoning/diagnostic_rules.py": "d570ee5f3edc99ff88bc747945ebe5812cd52a0848afb0acf7b9d9a770af02ce",
+    "ai_agent/reasoning/__init__.py": "d35ad018343bdc1036684748f872eaa2fdd6cb16392fafaa689c9476e2329711",
+    "ai_agent/tools/growth_tools.py": "5f1ecb0027554f33a8ffdf550b2743a367ba01e1a092f901ceb554c609bdb2fe",
+    "ai_agent/tools/funnel_tools.py": "562861d9e6058c226a34356ad220c284194e2b98684da9e7c799e2d36ad82a5f",
+    "ai_agent/tools/platform_tools.py": "751359042a4a54f80d5a9e028c802aa6db95fa25a8e7eea3fee59846fbddd2a3",
+    "ai_agent/tools/_common.py": "b929555406f6f09cd9684e646a55941eb005047998bf12d2053973c232b23b29",
+    "ai_agent/tools/__init__.py": "59c7d574b560b4130c3a87ec0f2e49006f2eb37ebcf58901924475d7df7e8c4f",
+    "ai_agent/tools/opportunity_tools.py": "0a9f12aed8834d8620dac4f45a9cc4bf1c98a3900442a04acb86011c911e19be",
+    "ai_agent/tools/experiment_tools.py": "2b648aec26c3c336a371687c42e9c5c6160734d80cb1b21ba57bd3c70ccf7cf8",
+    "ai_agent/evals/evaluation_cases.json": "405cad332a9ff1c3306a4f681be369f9f5847c189b48078c61e6a1c3e72cfa72",
+    "ai_agent/evals/expected_values.json": "a11dfbb9e8b7bcb2e5a7551bcaaceeb6710c06a4b4456a74440911f4e12eca15",
+    "ai_agent/evals/run_evaluation.py": "52acf4f6ba48d63f7c7b7b9ad3f0fb18e870b6947970b9c4ce28258a2f959cf4",
+    "ai_agent/evals/evaluation_report.md": "875542f2dc1561e5b077f6aa0f7e055a0d6f2f108b1fa133679cbec532a9dd05",
+    "ai_agent/evals/evaluation_results_after.json": "214a91cd1fd5836190541047993046d6e6d8926ebdfb3283afa743f2a7b9745a"
+  }
+}

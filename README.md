@@ -42,6 +42,8 @@ flowchart TD
 
 阅读导航：[数据准备](data/README.md) · [项目总结](reports/project_summary.md) · [分层画像 Notebook](notebooks/05_user_segmentation_visualization.ipynb) · [实验评估 Notebook](notebooks/07_ab_test_evaluation.ipynb) · [项目限制](#10-项目限制) · [复现方式](#12-如何运行)
 
+**AI Analytics Agent：**[模块说明](ai_agent/README.md)介绍冻结 deterministic baseline、独立 controlled LLM tool calling 与只读工具；[LLM provider](ai_agent/providers/openai_responses.py)、[离线 evaluator v2 说明](ai_agent/evals/llm_evaluation_v2_README.md)和[首次运行的探索性复评报告](ai_agent/evals/llm_evaluation_v2_report.md)提供实现与评估证据。V2 是事后建立的评估视图，其 case pass rate 不代表通用模型准确率。
+
 ## 1. 业务背景与问题
 
 这是公开数据作品集，不是真实企业内部项目。我先比较两个等长周末，再结合用户行为与匿名品类判断运营资源可以优先投向哪里。

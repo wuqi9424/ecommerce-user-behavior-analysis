@@ -2,7 +2,9 @@
 
 在已验证的 SQL 01–09 与 DuckDB 数据层之上，提供可重复调用、只读、可追溯的运营问答接口，减少问答时重复计算指标与混用口径。没有重做清洗、分层或增长分析。
 
-当前是 **deterministic rule-based prototype**，不是完整 autonomous agent，也没有接入 LLM。解释由接收结构化工具结果的通用 Python reasoning rules 生成，system prompt 保存下一阶段的行为契约，目前不会执行或调用模型。
+冻结 baseline 是 **deterministic rule-based prototype**，由接收结构化工具结果的通用 Python reasoning rules 生成解释，不调用模型。独立 Controlled LLM Agent 使用 OpenAI Responses API 选择白名单工具并生成解释，已完成首次真实 37-case 运行；两种入口都复用同一只读数据工具。
+
+阅读导航：[LLM 架构](#controlled-llm-agent独立入口) · [Provider 实现](providers/openai_responses.py) · [Evaluator v2 说明](evals/llm_evaluation_v2_README.md) · [Evaluator v2 报告](evals/llm_evaluation_v2_report.md)。
 
 ## 架构
 
@@ -68,7 +70,7 @@ python -m ai_agent.agent "哪些品类存在机会？" --top-n 3
 python -m ai_agent.evals.run_checks
 ```
 
-仅需 DuckDB；未添加框架、API、凭据、RAG、MCP 或 UI。已有数据库必须存在，不自动执行 pipeline 或重建数据库。CLI 回答成功返回 0，工具执行失败返回 1，unsupported / ambiguous 或参数解析失败返回 2；拒答与歧义仍输出结构化 JSON。
+上述 deterministic CLI 仅需 DuckDB，不调用外部 API；LLM CLI 另需模型配置。项目未添加框架、SDK、RAG、MCP 或 UI，不在仓库保存凭据。已有数据库必须存在，不自动执行 pipeline 或重建数据库。CLI 回答成功返回 0，工具执行失败返回 1，unsupported / ambiguous 或参数解析失败返回 2；拒答与歧义仍输出结构化 JSON。
 
 ## Evaluation
 
@@ -78,12 +80,69 @@ python -m ai_agent.evals.run_checks
 python -m ai_agent.evals.run_evaluation
 ```
 
-评估意图、实际工具调用、状态、冻结数值、必要事实、数据边界与禁断言，报告真实失败；有失败时进程返回非零。详见 [Evaluation 说明](evals/README.md) 和 [运行报告](evals/evaluation_report.md)。未来接入 LLM Tool Calling 后，使用同一测试集比较 semantic routing、tool selection、numeric grounding、boundary compliance 与 hallucination；新增轻量 numeric grounding 独立核验来源路径、difference / pct_change、统计设置与展示格式；仍不全面理解单位语义或每句话的因果含义。
+评估意图、实际工具调用、状态、冻结数值、必要事实、数据边界与禁断言，报告真实失败；有失败时进程返回非零。详见 [Evaluation 说明](evals/README.md) 和 [运行报告](evals/evaluation_report.md)。独立 LLM Tool Calling 使用同一问题集保留 legacy 严格成绩，并以 v2 单独分析多意图集合、工具选择、numeric grounding 与问题专属边界；新增轻量 numeric grounding 独立核验来源路径、difference / pct_change、统计设置与展示格式；仍不全面理解单位语义或每句话的因果含义。
 
 本轮 explanation 改进使 Overall Pass 从 30/37（81.08%）升到 37/37（100%），原 12 个失败路径、16 个评估器自检和 13 个 CLI 回归均通过。新增 15 个反事实 reasoning / grounding tests 验证结论随数据变化、拒绝无来源或伪造数字。expected facts、forbidden claims 和五个工具查询未改变。100% 仅适用于冻结测试集，不代表任意措辞或业务问题都正确。
 
 ## 下一阶段
 
-当前 37 个 Golden cases 已全部通过，建议冻结这版有限范围的 deterministic baseline，下一阶段进入受控 LLM Tool Calling，将这五个只读函数作为白名单并校验参数。对 LLM 解释核对数字来源和禁止推断，继续保持工具失败显式报错。只有在评估证明有必要时，再研究 constrained text-to-SQL（限定 SELECT、表/字段/指标、资源限制和独立验证），不直接开放自由 SQL。
+Deterministic baseline 在原 37 个 Golden cases 上全部通过，已冻结。独立受控 LLM Tool Calling 已完成首次真实运行，使用这五个只读函数作为白名单并校验参数。下一次模型评估应先冻结 v2 contracts，再运行新的独立模型结果，检查未见措辞、失败路径和重复运行稳定性。对 LLM 解释核对数字来源和禁止推断，继续保持工具失败显式报错。只有在评估证明有必要时，再研究 constrained text-to-SQL（限定 SELECT、表/字段/指标、资源限制和独立验证），不直接开放自由 SQL。
 
 验证入口与运行记录见 [evals/README.md](evals/README.md)。
+
+## Controlled LLM Agent（独立入口）
+
+冻结 `agent.py`、reasoning、五个工具和原 Golden Set 保持原样。`llm_agent.py` 不使用 baseline 的关键词路由或解释模板；模型选择工具并根据实际返回生成解释，控制层负责校验和执行。
+
+```text
+Question → LLM / Provider Protocol → Validated Tool Call → Same Read-only Tools
+         ← tool result + call_id ← DuckDB
+         → Structured Answer → Numeric Grounding / Boundary Checks → Trace
+```
+
+`tool_schemas.py` 声明五个函数的名称、描述、指标语义和 caveats。platform、growth、funnel、experiment 工具只接受空对象；opportunity 只接受必填整数 `top_n`（1–100，未指定时提示模型使用 5）。控制层拒绝 bool、额外参数、重复 JSON key、未知函数和无效 call_id。每题最多三次实际工具调用；批次先整体校验再执行，工具失败明确结束，不回退到 baseline 或快照。模型没有 SQL、Python、shell、文件或联网工具。
+
+Provider protocol 位于 [providers/base.py](providers/base.py)；[OpenAI 适配器](providers/openai_responses.py)使用标准库调用 OpenAI Responses API，使用 strict schemas、关闭 parallel tool calls 和服务端 response 存储。没有添加框架或 SDK。密钥仅从进程环境读取，不写入仓库。需要在本机安全环境中设置 `OPENAI_API_KEY` 和明确的 `OPENAI_MODEL`；可选 `AI_AGENT_PROVIDER=openai`。未配置时非零退出，明确报告 configuration error，零工具调用。
+
+```bash
+python -m ai_agent.llm_agent "为什么第二个周末流量增长了？"
+python -m ai_agent.llm_agent "哪些品类存在机会？请看前三个。"
+python -m ai_agent.llm_agent "平台规模如何，模拟 A/B Test 结果怎样？" --debug
+python -m ai_agent.llm_agent "A/B Test 是否证明召回有效？" --save-trace
+python -m unittest ai_agent.evals.test_llm_control -v
+python -m ai_agent.evals.run_llm_evaluation --mode compare --save-traces
+```
+
+`--debug` 输出完整 trace；`--save-trace` 由宿主保存到已忽略的 `ai_agent/runs/`。Trace 包含问题、工具名称、校验参数、实际结果、最终回答、调用计数、错误及模型元数据，并对已知密钥脱敏。动态 LLM evaluation results 也已加入 gitignore。普通 CLI 返回简化 JSON；answered 返回 0，unsupported/ambiguous 返回 2，配置、协议或工具错误返回 1。
+
+模型回答区分 facts、analysis、candidate_actions、caveats，并提供 numeric_evidence 来源路径或允许的派生公式。控制层独立重算展示数字，拒绝无来源数字和部分明确禁断言。它不能全面理解单位语义、自然语言数字或因果措辞；日期和不支持的格式可能保守拒绝。Prompt 与有限正则不能替代语义评估，不能据此承诺任意回答正确。
+
+当前离线验证共 116 个 tests 通过，包含 27 个 v2 self-tests 与既有协议、grounding、reasoning 回归；另有 16 个 legacy evaluator 自检和 12 个 failure-path checks 通过。离线测试验证控制与评估机制，不作为模型质量成绩。Deterministic baseline 的历史 37/37 结果及冻结文件哈希保持不变；比较入口的 `--verify-baseline` 重跑后会恢复历史报告字节，另存验证证据。
+
+Legacy 比较报告见 [llm_comparison_report.md](evals/llm_comparison_report.md)。原 37-case 标准保持不变；原四个 multi-intent cases 要求 ambiguous，多工具回答在严格标准下仍可能失败。Supplement 保留历史检查；独立 v2 提供 architecture-aware 评估视图，不改写原成绩。两种视图的任务范围与判定不同，不可直接横向比较，也不能把所有分数差异都归为 evaluator bug。
+
+LLM CLI 与 LLM evaluation 对 numeric grounding 失败最多追加一次最终回答修正，反馈包含失败数字的正文位置和校验原因。修正请求禁止调用工具，仍执行全部原有校验，不能改变回答状态绕过核验；第一次失败保存在 trace 的 `answer_validation_attempts`，第二次失败明确报错。最多三次工具调用不变，但可能多一次模型请求。直接调用 `run` 时可用 `repair_final_answer=True` 启用此行为。
+
+LLM numeric audit 支持明确下降方向的 presentation：正文“下降 X pp”可对应已验证的负值 evidence“-X”，条件是方向、单位及精度全部匹配。宿主仅转换审计副本中的表达，原正文、数值和来源路径不变，`numeric_grounding.presentation_bindings` 记录对应关系。上升、缺少方向词、否定或假设性下降、错单位和不匹配幅度不适用；不对任意数字取绝对值。
+
+
+## 首次真实 LLM evaluation
+
+首次真实 OpenAI 37-case LLM run 已完成。以下结果来自同一次保存的 traces，v2 仅离线复评，没有追加 API 请求。
+
+| 检查 | 结果 |
+|---|---:|
+| 无执行错误 | 37/37 |
+| Numeric grounding | 37/37 |
+| Forbidden claim cases | 0 |
+| Architecture-aware v2 overall case pass | 34/37（91.89%） |
+| Required tool set | 35/37 |
+| Status | 36/37 |
+| Boundary-specific checks | 12/12 |
+| Golden numeric display requirements | 12/17 |
+
+**v2 是基于第一次 traces 事后建立的 post-hoc exploratory evaluation**，不是事先冻结的 benchmark。Legacy frozen contract 下该次 LLM run 仍保留 **0/37**；deterministic baseline 的历史 37/37 不变。v2 的 91.89% 是该评估视图中的 case pass rate，不是 universal model accuracy，也不能表示模型能力因离线复评而提高。
+
+Numeric grounding 100% 不代表所有回答在语义上都完全正确；forbidden claim 0 hits 只代表当前规则没有命中违规表述。V2 仍保留 Cart 诊断缺少 growth 工具、GMV 拒答时额外查询平台、匿名品类问题状态不符三项失败。数字展示的缺失或精度不足单独报告，不等同于数字幻觉。
+
+详见 [v2 说明](evals/llm_evaluation_v2_README.md) 与 [v2 报告](evals/llm_evaluation_v2_report.md)。真实 traces 与动态 results 保留本地并被 Git 忽略，公开报告仅保留可审阅的评估摘要。

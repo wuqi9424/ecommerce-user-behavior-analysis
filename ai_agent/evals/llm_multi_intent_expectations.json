@@ -1,0 +1,28 @@
+{
+  "notes": "Supplement only. Original Golden Set and baseline ambiguous expectations are unchanged.",
+  "cases": {
+    "multi_intent_01": [
+      "get_platform_overview",
+      "get_ab_test_summary"
+    ],
+    "multi_intent_02": [
+      "get_weekend_growth",
+      "get_opportunity_analysis"
+    ],
+    "multi_intent_03": [
+      "get_funnel_comparison",
+      "get_opportunity_analysis"
+    ],
+    "multi_intent_04": [
+      "get_opportunity_analysis",
+      "get_ab_test_summary"
+    ]
+  },
+  "argument_expectations": {
+    "multi_intent_03": {
+      "get_opportunity_analysis": {
+        "top_n": 5
+      }
+    }
+  }
+}
