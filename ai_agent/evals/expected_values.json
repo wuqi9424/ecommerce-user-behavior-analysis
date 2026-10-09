@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "observation_window": [
+    "2017-11-25",
+    "2017-12-03"
+  ],
+  "timezone": "Asia/Shanghai",
+  "notes": "人工冻结的已验证 SQL ground truth；仅用于评估，不注入 Agent。百分比为 0–100，pp 为百分点；浮点绝对容差 0.00005。",
+  "values": {
+    "total_events": {
+      "intent": "platform",
+      "path": "key_data/total_events",
+      "value": 100095182,
+      "abs_tolerance": 0
+    },
+    "users": {
+      "intent": "platform",
+      "path": "key_data/total_users",
+      "value": 987991,
+      "abs_tolerance": 0
+    },
+    "previous_weekend_active_users": {
+      "intent": "growth",
+      "path": "key_data/periods/period_label=previous_weekend/active_users",
+      "value": 864829,
+      "abs_tolerance": 0
+    },
+    "final_weekend_active_users": {
+      "intent": "growth",
+      "path": "key_data/periods/period_label=final_weekend/active_users",
+      "value": 986594,
+      "abs_tolerance": 0
+    },
+    "active_user_growth_pct": {
+      "intent": "growth",
+      "path": "key_data/periods/period_label=final_weekend/active_user_growth_pct",
+      "value": 14.0797,
+      "abs_tolerance": 5e-05
+    },
+    "previous_pv_to_buy_rate": {
+      "intent": "funnel",
+      "path": "key_data/periods/period_label=previous_weekend/pv_to_buy_rate",
+      "value": 18.2785,
+      "abs_tolerance": 5e-05
+    },
+    "final_pv_to_buy_rate": {
+      "intent": "funnel",
+      "path": "key_data/periods/period_label=final_weekend/pv_to_buy_rate",
+      "value": 17.1709,
+      "abs_tolerance": 5e-05
+    },
+    "opportunity_categories": {
+      "intent": "opportunity",
+      "path": "key_data/opportunity_categories",
+      "value": 770,
+      "abs_tolerance": 0
+    },
+    "p1_users": {
+      "intent": "opportunity",
+      "path": "key_data/priorities/priority_segment=P1/distinct_users",
+      "value": 349857,
+      "abs_tolerance": 0
+    },
+    "p1_pairs": {
+      "intent": "opportunity",
+      "path": "key_data/priorities/priority_segment=P1/user_category_pairs",
+      "value": 658968,
+      "abs_tolerance": 0
+    },
+    "treatment_purchase_rate": {
+      "intent": "experiment",
+      "path": "key_data/treatment/purchase_user_rate",
+      "value": 25.3933,
+      "abs_tolerance": 5e-05
+    },
+    "control_purchase_rate": {
+      "intent": "experiment",
+      "path": "key_data/control/purchase_user_rate",
+      "value": 25.477,
+      "abs_tolerance": 5e-05
+    },
+    "absolute_lift_pp": {
+      "intent": "experiment",
+      "path": "key_data/absolute_lift_pp",
+      "value": -0.0837,
+      "abs_tolerance": 5e-05
+    },
+    "p_value": {
+      "intent": "experiment",
+      "path": "key_data/p_value",
+      "value": 0.6589,
+      "abs_tolerance": 5e-05
+    },
+    "ci_lower_pp": {
+      "intent": "experiment",
+      "path": "key_data/ci_lower_pp",
+      "value": -0.4552,
+      "abs_tolerance": 5e-05
+    },
+    "ci_upper_pp": {
+      "intent": "experiment",
+      "path": "key_data/ci_upper_pp",
+      "value": 0.2879,
+      "abs_tolerance": 5e-05
+    },
+    "mde_pp": {
+      "intent": "experiment",
+      "path": "key_data/mde_pp",
+      "value": 0.5341,
+      "abs_tolerance": 5e-05
+    }
+  }
+}

@@ -1,0 +1,3080 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "direct_01",
+      "category": "direct",
+      "question": "平台一共有多少用户？",
+      "expected_intent": "platform",
+      "expected_tool": "get_platform_overview",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "九天内任意行为的去重用户"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "users"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_02",
+      "category": "direct",
+      "question": "一共有多少条有效行为记录？",
+      "expected_intent": "platform",
+      "expected_tool": "get_platform_overview",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "九天内任意行为的去重用户"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "total_events"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_03",
+      "category": "direct",
+      "question": "Final Weekend 有多少活跃用户？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "final_weekend_active_users"
+        },
+        {
+          "type": "number",
+          "expected_value": "previous_weekend_active_users"
+        },
+        {
+          "type": "number",
+          "expected_value": "active_user_growth_pct"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_04",
+      "category": "direct",
+      "question": "机会品类有多少个？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "opportunity_categories"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_05",
+      "category": "direct",
+      "question": "P1 有多少去重用户？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "p1_users"
+        },
+        {
+          "type": "number",
+          "expected_value": "p1_pairs"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_06",
+      "category": "direct",
+      "question": "Treatment purchase_user_rate 是多少？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "treatment_purchase_rate"
+        },
+        {
+          "type": "number",
+          "expected_value": "control_purchase_rate"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_07",
+      "category": "direct",
+      "question": "p-value 是多少？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "p_value"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_08",
+      "category": "direct",
+      "question": "A/B Test 的 lift、CI 和 MDE 是多少？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "absolute_lift_pp"
+        },
+        {
+          "type": "number",
+          "expected_value": "ci_lower_pp"
+        },
+        {
+          "type": "number",
+          "expected_value": "ci_upper_pp"
+        },
+        {
+          "type": "number",
+          "expected_value": "mde_pp"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "direct_09",
+      "category": "direct",
+      "question": "两个周末的 pv_to_buy_rate 是多少？",
+      "expected_intent": "funnel",
+      "expected_tool": "get_funnel_comparison",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "浏览且意向且购买 / 浏览且意向"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "每日无序用户集合比例的等权均值"
+          ]
+        },
+        {
+          "type": "number",
+          "expected_value": "previous_pv_to_buy_rate"
+        },
+        {
+          "type": "number",
+          "expected_value": "final_pv_to_buy_rate"
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_01",
+      "category": "paraphrase",
+      "question": "第二个周末为什么更活跃？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_02",
+      "category": "paraphrase",
+      "question": "12月2日至3日的增长来自哪里？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_03",
+      "category": "paraphrase",
+      "question": "最后一个周末流量为什么明显更高？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_04",
+      "category": "paraphrase",
+      "question": "weekend growth 是用户变多还是用户更活跃？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_05",
+      "category": "paraphrase",
+      "question": "final weekend conversion 怎么样？",
+      "expected_intent": "funnel",
+      "expected_tool": "get_funnel_comparison",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "浏览且意向且购买 / 浏览且意向"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "每日无序用户集合比例的等权均值"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_06",
+      "category": "paraphrase",
+      "question": "哪些 opportunity categories 最值得关注？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "paraphrase_07",
+      "category": "paraphrase",
+      "question": "A/B result significant 吗？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "diagnostic_01",
+      "category": "diagnostic",
+      "question": "为什么不能说第二个周末购买表现下降？",
+      "expected_intent": "funnel",
+      "expected_tool": "get_funnel_comparison",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "浏览且意向且购买 / 浏览且意向"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "每日无序用户集合比例的等权均值"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "购买人数增加",
+            "购买人数增长",
+            "购买规模增加"
+          ]
+        },
+        {
+          "type": "sections",
+          "scope": "interpretation",
+          "fields": [
+            "facts",
+            "analysis",
+            "candidate_actions"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "业务解释必须回应诊断问题，不能只输出泛化意图模板；缺失必要解释应如实失败。"
+    },
+    {
+      "id": "diagnostic_02",
+      "category": "diagnostic",
+      "question": "哪个漏斗环节下降更明显？",
+      "expected_intent": "funnel",
+      "expected_tool": "get_funnel_comparison",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "浏览且意向且购买 / 浏览且意向"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "每日无序用户集合比例的等权均值"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "意向→购买的百分点降幅更大",
+            "intent_to_buy_rate 的百分点降幅更大"
+          ]
+        },
+        {
+          "type": "sections",
+          "scope": "interpretation",
+          "fields": [
+            "facts",
+            "analysis",
+            "candidate_actions"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "业务解释必须回应诊断问题，不能只输出泛化意图模板；缺失必要解释应如实失败。"
+    },
+    {
+      "id": "diagnostic_03",
+      "category": "diagnostic",
+      "question": "为什么 Cart 增长不能证明购买意愿一定提升？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能证明购买意愿",
+            "不能确认购买意愿"
+          ]
+        },
+        {
+          "type": "sections",
+          "scope": "interpretation",
+          "fields": [
+            "facts",
+            "analysis",
+            "candidate_actions"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "业务解释必须回应诊断问题，不能只输出泛化意图模板；缺失必要解释应如实失败。"
+    },
+    {
+      "id": "diagnostic_04",
+      "category": "diagnostic",
+      "question": "P3 人数最多，为什么不一定优先做 P3？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模不等于优先级",
+            "人数最多不等于",
+            "规模不代表购买概率"
+          ]
+        },
+        {
+          "type": "sections",
+          "scope": "interpretation",
+          "fields": [
+            "facts",
+            "analysis",
+            "candidate_actions"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "业务解释必须回应诊断问题，不能只输出泛化意图模板；缺失必要解释应如实失败。"
+    },
+    {
+      "id": "diagnostic_05",
+      "category": "diagnostic",
+      "question": "为什么 P1 比 P3 更适合作为召回测试候选？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "P1 加购",
+            "P1 有 cart"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "P3",
+            "纯浏览"
+          ]
+        },
+        {
+          "type": "sections",
+          "scope": "interpretation",
+          "fields": [
+            "facts",
+            "analysis",
+            "candidate_actions"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "业务解释必须回应诊断问题，不能只输出泛化意图模板；缺失必要解释应如实失败。"
+    },
+    {
+      "id": "boundary_01",
+      "category": "boundary",
+      "question": "这九天 GMV 是多少？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "boundary_02",
+      "category": "boundary",
+      "question": "哪个品类收入最高？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "boundary_03",
+      "category": "boundary",
+      "question": "哪个渠道带来的增长最多？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "boundary_04",
+      "category": "boundary",
+      "question": "用户长期复购率是多少？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "boundary_05",
+      "category": "boundary",
+      "question": "哪个具体商品类别表现最好？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "boundary_06",
+      "category": "boundary",
+      "question": "这次活动 ROI 是多少？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "causal_01",
+      "category": "causal",
+      "question": "购物车召回提升了多少转化率？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "causal_02",
+      "category": "causal",
+      "question": "A/B Test 证明召回无效了吗？",
+      "expected_intent": "experiment",
+      "expected_tool": "get_ab_test_summary",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "simulated_assignment"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "没有真实 treatment / exposure"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能据此证明购物车召回有效或无效"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "causal_03",
+      "category": "causal",
+      "question": "Final Weekend 增长是不是广告投放导致的？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断",
+            "不能确认"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "causal_04",
+      "category": "causal",
+      "question": "P1 用户一定更容易购买吗？",
+      "expected_intent": "opportunity",
+      "expected_tool": "get_opportunity_analysis",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "跨层相加"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "key_data",
+          "any_of": [
+            "12/03 结束后"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能确定购买概率",
+            "不是购买概率模型",
+            "不是预测购买概率"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "causal_05",
+      "category": "causal",
+      "question": "newly observed 用户是不是新增注册用户？",
+      "expected_intent": "growth",
+      "expected_tool": "get_weekend_growth",
+      "expected_status": "answered",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "规模与人均强度共同增长"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不是新注册用户",
+            "newly observed ≠ new registered user"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "causal_06",
+      "category": "causal",
+      "question": "购买沉寂用户是不是已经流失？",
+      "expected_intent": "unsupported",
+      "expected_tool": null,
+      "expected_status": "unsupported",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "无法判断"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "不能判断长期流失",
+            "不能据此判定流失",
+            "不等于平台流失"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "纠正错误前提，不能只展示相关指标；沉寂不在五个工具覆盖范围，应拒答并说明边界。"
+    },
+    {
+      "id": "multi_intent_01",
+      "category": "multi_intent",
+      "question": "告诉我平台规模和 A/B Test 结果。",
+      "expected_intent": "ambiguous",
+      "expected_tool": null,
+      "expected_status": "ambiguous",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "多个分析意图",
+            "单一主题"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "multi_intent_02",
+      "category": "multi_intent",
+      "question": "周末增长和机会品类分别是什么情况？",
+      "expected_intent": "ambiguous",
+      "expected_tool": null,
+      "expected_status": "ambiguous",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "多个分析意图",
+            "单一主题"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "multi_intent_03",
+      "category": "multi_intent",
+      "question": "帮我分析漏斗再给我 Top 5 category。",
+      "expected_intent": "ambiguous",
+      "expected_tool": null,
+      "expected_status": "ambiguous",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "多个分析意图",
+            "单一主题"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    },
+    {
+      "id": "multi_intent_04",
+      "category": "multi_intent",
+      "question": "哪些用户值得运营，以及实验是否显著？",
+      "expected_intent": "ambiguous",
+      "expected_tool": null,
+      "expected_status": "ambiguous",
+      "required_facts": [
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "buy event ≠ order",
+            "buy 不能作为订单数"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能推断长期行为",
+            "九天观察"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "response",
+          "any_of": [
+            "不能把相关性解释成因果",
+            "不是因果"
+          ]
+        },
+        {
+          "type": "text",
+          "scope": "interpretation",
+          "any_of": [
+            "多个分析意图",
+            "单一主题"
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        {
+          "id": "buy_is_order",
+          "pattern": "(?:buy\\s*(?:event)?\\s*(?:就是|等于|=|is)|购买行为(?:事件)?(?:就是|等于))\\s*(?:真实)?(?:订单|orders?)"
+        },
+        {
+          "id": "newly_registered",
+          "pattern": "(?:newly observed|首次观测)\\s*(?:用户)?\\s*(?:就是|等于|=)\\s*(?:新增|新)?注册用户"
+        },
+        {
+          "id": "long_term",
+          "pattern": "(?:长期复购率(?:是|为)\\s*\\d|购买沉寂用户(?:已经|均已|就是)流失)"
+        },
+        {
+          "id": "recall_effect",
+          "pattern": "(?:购物车)?召回(?:已被证明|已经证明|被证明|确实|已经)(?:有效|无效)|(?:购物车)?召回(?:使|让|带来|导致|提升了)\\s*(?:购买|转化|\\d)"
+        },
+        {
+          "id": "causal_growth",
+          "pattern": "(?:广告投放|促销|活动)(?:导致了|导致|带来了|带来|造成了|造成)(?:周末|final weekend|流量|用户|增长)"
+        },
+        {
+          "id": "unsupported_revenue",
+          "pattern": "(?:GMV|ROI|营收|收入)\\s*(?:是|为|达到|最高的是)\\s*\\d"
+        },
+        {
+          "id": "guaranteed_purchase",
+          "pattern": "P1\\s*用户(?:一定|必然|保证)(?:更容易)?购买"
+        }
+      ],
+      "notes": "仅当前固定窗口；不得以事件比替代用户率。"
+    }
+  ]
+}

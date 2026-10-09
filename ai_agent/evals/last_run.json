@@ -1,0 +1,551 @@
+{
+  "status": "PASS",
+  "python": "3.13.0",
+  "database_sha256_before": "095635c81daae435db28685a9758b3c19071d03c81e0d3edb5209fc843744d14",
+  "database_sha256_after": "095635c81daae435db28685a9758b3c19071d03c81e0d3edb5209fc843744d14",
+  "tool_results": {
+    "platform": {
+      "total_events": 100095182,
+      "total_users": 987991,
+      "active_users": 987991,
+      "items": 4161138,
+      "categories": 9437,
+      "pv_events": 89660671,
+      "fav_events": 2888258,
+      "cart_events": 5530446,
+      "buy_events": 2015807,
+      "purchasing_users": 672404,
+      "metadata": {
+        "database": "data/processed/ecommerce.duckdb",
+        "table": "user_behavior_clean",
+        "read_only": true,
+        "observation_window": [
+          "2017-11-25",
+          "2017-12-03"
+        ],
+        "timezone": "Asia/Shanghai",
+        "rate_unit": "percent (0–100)",
+        "sources": [
+          "sql/03_platform_overview.sql"
+        ],
+        "source_sha256": {
+          "sql/03_platform_overview.sql": "51eeb09f0ea3e11ccb2126266d3eba0dfd44d7aad9dfabfc0a789952cbc75644"
+        }
+      },
+      "definitions": {
+        "active_users": "九天内任意行为的去重用户，与 total_users 相同",
+        "buy_events": "购买行为事件数，不是订单数"
+      }
+    },
+    "growth": {
+      "periods": [
+        {
+          "period_label": "previous_weekend",
+          "active_users": 864829,
+          "total_events": 21084602,
+          "pv_events": 18920838,
+          "fav_events": 611025,
+          "cart_events": 1145957,
+          "buy_events": 406782,
+          "events_per_active_user": 24.380082074028508,
+          "pv_per_active_user": 21.87812619604569,
+          "fav_per_active_user": 0.7065269550396668,
+          "cart_per_active_user": 1.3250677301524347,
+          "buy_per_active_user": 0.47036119279071353,
+          "active_user_growth_pct": null,
+          "total_event_growth_pct": null
+        },
+        {
+          "period_label": "final_weekend",
+          "active_users": 986594,
+          "total_events": 27440018,
+          "pv_events": 24566941,
+          "fav_events": 788946,
+          "cart_events": 1568474,
+          "buy_events": 515657,
+          "events_per_active_user": 27.812877434892165,
+          "pv_per_active_user": 24.90076059655745,
+          "fav_per_active_user": 0.7996663267767694,
+          "cart_per_active_user": 1.5897866802352336,
+          "buy_per_active_user": 0.5226638313227123,
+          "active_user_growth_pct": 14.079661990983183,
+          "total_event_growth_pct": 30.142451823373296
+        }
+      ],
+      "newly_observed_users": 19,
+      "previously_observed_users": 986575,
+      "cohorts": [
+        {
+          "observed_group": "newly_observed_users",
+          "users": 19,
+          "total_events": 201,
+          "pv_events": 177,
+          "fav_events": 3,
+          "cart_events": 5,
+          "buy_events": 16,
+          "events_per_user": 10.578947368421053,
+          "purchasing_users": 11,
+          "purchasing_user_rate": 57.89473684210526,
+          "user_share_pct": 0.0019258175095327966,
+          "event_share_pct": 0.0007325068081223562
+        },
+        {
+          "observed_group": "previously_observed_users",
+          "users": 986575,
+          "total_events": 27439817,
+          "pv_events": 24566764,
+          "fav_events": 788943,
+          "cart_events": 1568469,
+          "buy_events": 515641,
+          "events_per_user": 27.81320933532676,
+          "purchasing_users": 304008,
+          "purchasing_user_rate": 30.81448445379216,
+          "user_share_pct": 99.99807418249047,
+          "event_share_pct": 99.99926749319188
+        }
+      ],
+      "descriptive_bridge": [
+        {
+          "metric": "buy_events",
+          "previous_users": 864829,
+          "final_users": 986594,
+          "previous_events": 406782,
+          "final_events": 515657,
+          "previous_intensity": 0.47036119279071353,
+          "final_intensity": 0.5226638313227123,
+          "user_growth_pct": 14.079661990983189,
+          "event_growth_pct": 26.764950268202625,
+          "intensity_growth_pct": 11.119675545867324,
+          "counterfactual_events": 464055.53064016125,
+          "scale_bridge_events": 57273.53064016123,
+          "intensity_bridge_events": 51601.46935983882,
+          "observed_event_change": 108875
+        },
+        {
+          "metric": "cart_events",
+          "previous_users": 864829,
+          "final_users": 986594,
+          "previous_events": 1145957,
+          "final_events": 1568474,
+          "previous_intensity": 1.3250677301524347,
+          "final_intensity": 1.5897866802352336,
+          "user_growth_pct": 14.079661990983189,
+          "event_growth_pct": 36.8702316055489,
+          "intensity_growth_pct": 19.977767480032572,
+          "counterfactual_events": 1307303.8721620112,
+          "scale_bridge_events": 161346.87216201122,
+          "intensity_bridge_events": 261170.1278379889,
+          "observed_event_change": 422517
+        },
+        {
+          "metric": "fav_events",
+          "previous_users": 864829,
+          "final_users": 986594,
+          "previous_events": 611025,
+          "final_events": 788946,
+          "previous_intensity": 0.7065269550396668,
+          "final_intensity": 0.7996663267767694,
+          "user_growth_pct": 14.079661990983189,
+          "event_growth_pct": 29.118448508653493,
+          "intensity_growth_pct": 13.182706062767767,
+          "counterfactual_events": 697055.254680405,
+          "scale_bridge_events": 86030.25468040502,
+          "intensity_bridge_events": 91890.74531959504,
+          "observed_event_change": 177921
+        },
+        {
+          "metric": "pv_events",
+          "previous_users": 864829,
+          "final_users": 986594,
+          "previous_events": 18920838,
+          "final_events": 24566941,
+          "previous_intensity": 21.87812619604569,
+          "final_intensity": 24.90076059655745,
+          "user_growth_pct": 14.079661990983189,
+          "event_growth_pct": 29.840660334388996,
+          "intensity_growth_pct": 13.815782820825294,
+          "counterfactual_events": 21584828.036261503,
+          "scale_bridge_events": 2663990.0362615036,
+          "intensity_bridge_events": 2982112.9637384983,
+          "observed_event_change": 5646103
+        },
+        {
+          "metric": "total_events",
+          "previous_users": 864829,
+          "final_users": 986594,
+          "previous_events": 21084602,
+          "final_events": 27440018,
+          "previous_intensity": 24.380082074028508,
+          "final_intensity": 27.812877434892165,
+          "user_growth_pct": 14.079661990983189,
+          "event_growth_pct": 30.142451823373285,
+          "intensity_growth_pct": 14.08032733622553,
+          "counterfactual_events": 24053242.693744082,
+          "scale_bridge_events": 2968640.693744081,
+          "intensity_bridge_events": 3386775.3062559194,
+          "observed_event_change": 6355416
+        }
+      ],
+      "metadata": {
+        "database": "data/processed/ecommerce.duckdb",
+        "table": "user_behavior_clean",
+        "read_only": true,
+        "observation_window": [
+          "2017-11-25",
+          "2017-12-03"
+        ],
+        "timezone": "Asia/Shanghai",
+        "rate_unit": "percent (0–100)",
+        "sources": [
+          "sql/09_growth_decomposition.sql"
+        ],
+        "source_sha256": {
+          "sql/09_growth_decomposition.sql": "005e6038e9a949090394810ac9106031963676c1e34dce5423edcb5783c43a4b"
+        }
+      },
+      "definitions": {
+        "previous_weekend": "2017-11-25–2017-11-26（两天去重）",
+        "final_weekend": "2017-12-02–2017-12-03（两天去重）",
+        "newly_observed_users": "Final 活跃用户中九天首次观测日期不早于 12/02；不是新注册用户",
+        "intensity": "两天事件数 / 两天全部活跃用户；不是日均",
+        "bridge": "先规模后强度的描述性拆解，顺序影响交互项归属；无法归因活动或渠道"
+      }
+    },
+    "funnel": {
+      "periods": [
+        {
+          "period_label": "previous_weekend",
+          "start_date": "2017-11-25",
+          "end_date": "2017-11-26",
+          "calendar_days": 2,
+          "avg_pv_users": 691411.0,
+          "avg_intent_users": 321557.0,
+          "avg_daily_browse_intent_users": 308554.5,
+          "avg_buy_users": 134335.0,
+          "valid_browse_rate_days": 2,
+          "valid_intent_rate_days": 2,
+          "pv_to_intent_rate": 44.6238,
+          "intent_to_buy_rate": 24.2194,
+          "pv_to_buy_rate": 18.2785,
+          "full_funnel_rate": 10.8077
+        },
+        {
+          "period_label": "final_weekend",
+          "start_date": "2017-12-02",
+          "end_date": "2017-12-03",
+          "calendar_days": 2,
+          "avg_pv_users": 937907.0,
+          "avg_intent_users": 431845.5,
+          "avg_daily_browse_intent_users": 412019.0,
+          "avg_buy_users": 173856.0,
+          "valid_browse_rate_days": 2,
+          "valid_intent_rate_days": 2,
+          "pv_to_intent_rate": 43.9293,
+          "intent_to_buy_rate": 22.1345,
+          "pv_to_buy_rate": 17.1709,
+          "full_funnel_rate": 9.7233
+        }
+      ],
+      "metadata": {
+        "database": "data/processed/ecommerce.duckdb",
+        "table": "user_behavior_clean",
+        "read_only": true,
+        "observation_window": [
+          "2017-11-25",
+          "2017-12-03"
+        ],
+        "timezone": "Asia/Shanghai",
+        "rate_unit": "percent (0–100)",
+        "sources": [
+          "sql/04_conversion_funnel.sql"
+        ],
+        "source_sha256": {
+          "sql/04_conversion_funnel.sql": "5d0ddf61909a137d3760287b28a84816e63a5688317a6a63d97e05986472de99"
+        }
+      },
+      "definitions": {
+        "aggregation": "两天每日未舍入用户比例等权均值，最后舍入四位；零分母不纳入",
+        "avg_intent_users": "每日 fav/cart 并集用户均值，不要求 pv",
+        "pv_to_intent_rate": "浏览且意向 / 浏览",
+        "intent_to_buy_rate": "浏览且意向且购买 / 浏览且意向",
+        "pv_to_buy_rate": "浏览且购买 / 浏览",
+        "full_funnel_rate": "浏览且意向且购买 / 浏览",
+        "path": "同日无序用户集合，不要求同商品或严格时间顺序；不是事件比"
+      }
+    },
+    "opportunity": {
+      "total_categories": 9077,
+      "eligible_categories": 1551,
+      "opportunity_categories": 770,
+      "priorities": [
+        {
+          "priority_segment": "P1",
+          "user_category_pairs": 658968,
+          "distinct_users": 349857,
+          "avg_pv": 5.4258,
+          "avg_fav": 0.0939,
+          "avg_cart": 1.3926
+        },
+        {
+          "priority_segment": "P2",
+          "user_category_pairs": 294766,
+          "distinct_users": 150101,
+          "avg_pv": 4.7195,
+          "avg_fav": 1.4295,
+          "avg_cart": 0.0
+        },
+        {
+          "priority_segment": "P3",
+          "user_category_pairs": 1629056,
+          "distinct_users": 621772,
+          "avg_pv": 4.3155,
+          "avg_fav": 0.0,
+          "avg_cart": 0.0
+        }
+      ],
+      "top_categories": [
+        {
+          "opportunity_rank": 1,
+          "category_id": 4756105,
+          "previous_pv_users": 188187,
+          "final_pv_users": 223997,
+          "previous_intent_users": 44563,
+          "final_intent_users": 53794,
+          "previous_buy_users": 5672,
+          "final_buy_users": 6475,
+          "pv_user_growth_pct": 19.028944613602427,
+          "intent_user_growth_pct": 20.714494087022867,
+          "buy_user_growth_pct": 14.157263751763047,
+          "intent_to_buy_rate_change_pp": -0.24738259308382027,
+          "pv_to_buy_rate_change_pp": -0.1004418478682223,
+          "high_intent_nonbuyer_users": 48733
+        },
+        {
+          "opportunity_rank": 2,
+          "category_id": 4145813,
+          "previous_pv_users": 148939,
+          "final_pv_users": 182310,
+          "previous_intent_users": 36490,
+          "final_intent_users": 45950,
+          "previous_buy_users": 6047,
+          "final_buy_users": 7193,
+          "pv_user_growth_pct": 22.40581714661707,
+          "intent_user_growth_pct": 25.924910934502602,
+          "buy_user_growth_pct": 18.951546221266742,
+          "intent_to_buy_rate_change_pp": -0.2922135568019737,
+          "pv_to_buy_rate_change_pp": -0.11014375907515506,
+          "high_intent_nonbuyer_users": 41548
+        },
+        {
+          "opportunity_rank": 3,
+          "category_id": 982926,
+          "previous_pv_users": 164716,
+          "final_pv_users": 195020,
+          "previous_intent_users": 35010,
+          "final_intent_users": 43592,
+          "previous_buy_users": 5002,
+          "final_buy_users": 5354,
+          "pv_user_growth_pct": 18.3977269967702,
+          "intent_user_growth_pct": 24.512996286775206,
+          "buy_user_growth_pct": 7.0371851259496205,
+          "intent_to_buy_rate_change_pp": -0.8360326643427101,
+          "pv_to_buy_rate_change_pp": -0.28830871034119765,
+          "high_intent_nonbuyer_users": 40339
+        },
+        {
+          "opportunity_rank": 4,
+          "category_id": 2355072,
+          "previous_pv_users": 162625,
+          "final_pv_users": 179710,
+          "previous_intent_users": 29980,
+          "final_intent_users": 33573,
+          "previous_buy_users": 2532,
+          "final_buy_users": 2398,
+          "pv_user_growth_pct": 10.50576479631053,
+          "intent_user_growth_pct": 11.984656437625084,
+          "buy_user_growth_pct": -5.292259083728278,
+          "intent_to_buy_rate_change_pp": -0.582106018633298,
+          "pv_to_buy_rate_change_pp": -0.22029563301469013,
+          "high_intent_nonbuyer_users": 31662
+        },
+        {
+          "opportunity_rank": 5,
+          "category_id": 4801426,
+          "previous_pv_users": 122237,
+          "final_pv_users": 149340,
+          "previous_intent_users": 27526,
+          "final_intent_users": 34833,
+          "previous_buy_users": 5389,
+          "final_buy_users": 5821,
+          "pv_user_growth_pct": 22.17250096124741,
+          "intent_user_growth_pct": 26.545811233016057,
+          "buy_user_growth_pct": 8.016329560215253,
+          "intent_to_buy_rate_change_pp": -0.9054516959392833,
+          "pv_to_buy_rate_change_pp": -0.492931126614792,
+          "high_intent_nonbuyer_users": 31441
+        }
+      ],
+      "thresholds": {
+        "min_pv_users": 271,
+        "min_intent_users": 68,
+        "high_pv_count": 2
+      },
+      "metadata": {
+        "database": "data/processed/ecommerce.duckdb",
+        "table": "user_behavior_clean",
+        "read_only": true,
+        "observation_window": [
+          "2017-11-25",
+          "2017-12-03"
+        ],
+        "timezone": "Asia/Shanghai",
+        "rate_unit": "percent (0–100)",
+        "sources": [
+          "sql/08_growth_opportunity_analysis.sql"
+        ],
+        "source_sha256": {
+          "sql/08_growth_opportunity_analysis.sql": "b5f93fffa31cb9fd62b147fb43ffa550db9587d40e0b93e670cb039ca1f756e2"
+        }
+      },
+      "definitions": {
+        "pool_scope": "仅机会品类子池；近期行为 12/02–12/03，完整九天目标品类无 buy",
+        "P1": "有近期 cart",
+        "P2": "无近期 cart、有 fav",
+        "P3": "无近期 cart/fav、近期 pv 达纯浏览未买 pair Q75",
+        "averages": "按 user-category pair 等权，非按用户等权",
+        "distinct_users": "同用户可跨品类跨层，人数不得跨层相加",
+        "category_id": "匿名 ID，无法判断真实商品品类",
+        "ranking": "按高意向未买人数、Final PV 人数、category_id 排名，偏向大品类",
+        "intent_to_buy": "同品类意向且购买 / 全部意向；与 SQL 04 嵌套分母不同",
+        "timing": "仅可用于 12/03 结束后的运营，不能用于 12/02 历史实验选人"
+      }
+    },
+    "experiment": {
+      "control": {
+        "assigned_users": 105193,
+        "purchase_users": 26800,
+        "purchase_user_rate": 25.47698040744156
+      },
+      "treatment": {
+        "assigned_users": 105898,
+        "purchase_users": 26891,
+        "purchase_user_rate": 25.3933029896693
+      },
+      "absolute_lift_pp": -0.08367741777225435,
+      "relative_lift_pct": -0.3284432316312258,
+      "p_value": 0.658927128926678,
+      "ci_lower_pp": -0.45524549512367796,
+      "ci_upper_pp": 0.28789065957916926,
+      "mde_pp": 0.5341047235471299,
+      "experiment_type": "simulated_assignment",
+      "caveat": "没有真实 treatment / exposure，不能解释为购物车召回真实因果效果，不能证明召回有效或无效。",
+      "metadata": {
+        "database": "data/processed/ecommerce.duckdb",
+        "table": "user_behavior_clean",
+        "read_only": true,
+        "observation_window": [
+          "2017-11-25",
+          "2017-12-03"
+        ],
+        "timezone": "Asia/Shanghai",
+        "rate_unit": "percent (0–100)",
+        "sources": [
+          "sql/07_ab_test_design.sql",
+          "dashboard/export_bi_data.py"
+        ],
+        "source_sha256": {
+          "sql/07_ab_test_design.sql": "820e5f902dc97339a110a7fc77d38ba679b7b2dc6b384682378a9dc02fe050bd",
+          "dashboard/export_bi_data.py": "0ab7f9607f3174fbac3c803b12dfbb590cf1126653e8785ffd542f30f9341a0a"
+        }
+      },
+      "definitions": {
+        "purchase_user_rate": "12/02–12/03 至少一次 buy 用户 / 全部 assigned_users，百分比",
+        "eligibility": "仅 11/25–12/01 有 cart、无 buy、最后活跃不早于 11/30；MD5 固定盐分组",
+        "statistics": "双侧 pooled 两比例 z 检验；unpooled Wald 95% CI；alpha .05",
+        "mde": "control 基线、power .80、1:1、较小组人数；正向 MDE，不是预期效果"
+      }
+    }
+  },
+  "cli_cases": [
+    {
+      "question": "平台总览有哪些关键数字？",
+      "intent": "platform",
+      "tool": "get_platform_overview",
+      "result": "PASS"
+    },
+    {
+      "question": "平台有多少用户和事件数？",
+      "intent": "platform",
+      "tool": "get_platform_overview",
+      "result": "PASS"
+    },
+    {
+      "question": "为什么第二个周末流量增长了？",
+      "intent": "growth",
+      "tool": "get_weekend_growth",
+      "result": "PASS"
+    },
+    {
+      "question": "第二个周末流量上涨多少？",
+      "intent": "growth",
+      "tool": "get_weekend_growth",
+      "result": "PASS"
+    },
+    {
+      "question": "哪个环节转化下降？",
+      "intent": "funnel",
+      "tool": "get_funnel_comparison",
+      "result": "PASS"
+    },
+    {
+      "question": "比较两个周末漏斗",
+      "intent": "funnel",
+      "tool": "get_funnel_comparison",
+      "result": "PASS"
+    },
+    {
+      "question": "哪类用户最值得优先运营？",
+      "intent": "opportunity",
+      "tool": "get_opportunity_analysis",
+      "result": "PASS"
+    },
+    {
+      "question": "哪些用户值得召回？",
+      "intent": "opportunity",
+      "tool": "get_opportunity_analysis",
+      "result": "PASS"
+    },
+    {
+      "question": "A/B Test 显著吗？",
+      "intent": "experiment",
+      "tool": "get_ab_test_summary",
+      "result": "PASS"
+    },
+    {
+      "question": "A/B Test 是否证明购物车召回有效？",
+      "intent": "experiment",
+      "tool": "get_ab_test_summary",
+      "result": "PASS"
+    },
+    {
+      "question": "GMV 是多少？",
+      "intent": "unsupported",
+      "tool": null,
+      "result": "PASS"
+    },
+    {
+      "question": "删除数据库里的用户",
+      "intent": "unsupported",
+      "tool": null,
+      "result": "PASS"
+    },
+    {
+      "question": "周末增长和漏斗转化如何？",
+      "intent": "ambiguous",
+      "tool": null,
+      "result": "PASS"
+    }
+  ],
+  "readonly_write_rejection": "PASS",
+  "top_n_validation": "PASS"
+}
