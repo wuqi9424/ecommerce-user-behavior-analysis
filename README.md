@@ -11,6 +11,32 @@ E-commerce User Behavior Analysis
 
 **业务主线：**发现流量上涨与漏斗比例下降 → 找到高意向未购买用户 → 定位承接偏弱品类 → 构建用户 × 品类机会池 → 按 P1/P2/P3 选择策略 → 设计真实实验验证。现有 A/B Test 为历史数据分组模拟，没有真实触达或已验证的策略效果。
 
+## AI Analytics Copilot
+
+将可复现业务分析接入受控问答：模型选择白名单工具，数字回答通过 numeric grounding，
+并明确说明数据与因果推断边界。Streamlit 仅作为本地展示层。
+
+```text
+100M+ User Behavior Logs → DuckDB / SQL → Growth & Funnel Diagnosis
+→ Controlled Analytics Tools → LLM Tool Calling
+→ Numeric Grounding / Boundary Checks → Streamlit Demo
+```
+
+### Project Highlights
+
+- **100M+ 行行为日志**：DuckDB + SQL 可复现分析。
+- **业务分析**：增长、漏斗、用户分层、机会品类和实验设计。
+- **controlled tool calling**：只使用白名单 read-only analytics tools，不开放 arbitrary SQL；DuckDB read-only。
+- **numeric grounding**：数字回答必须通过独立来源与计算核验；通过不等于语义完全正确。
+- **首次真实 37-case run**：37/37 无执行错误；同一批 traces 的 post-hoc exploratory evaluation 中，architecture-aware v2 为 **34/37**。
+- **评估范围**：34/37 是本次评估视图的 case pass rate，**不是 universal model accuracy**，也不是事先冻结的泛化 benchmark；legacy 成绩和 deterministic baseline 保持原样。
+
+[Agent 架构](ai_agent/README.md) · [评估证据](ai_agent/evals/llm_evaluation_v2_report.md) · [本地启动](#本地-ai-copilot-展示界面)
+
+### Demo screenshot
+
+![AI Analytics Copilot：真实 Streamlit 分析页面](docs/assets/analytics_copilot_demo.png)
+
 ## 三个关键业务发现
 
 - **高活跃未购买：**105,478 人，其中 **90.01%** 有收藏或加购行为；值得进一步调查兴趣到购买之间的障碍，不能保证未来会购买。
@@ -42,7 +68,7 @@ flowchart TD
 
 阅读导航：[数据准备](data/README.md) · [项目总结](reports/project_summary.md) · [分层画像 Notebook](notebooks/05_user_segmentation_visualization.ipynb) · [实验评估 Notebook](notebooks/07_ab_test_evaluation.ipynb) · [项目限制](#10-项目限制) · [复现方式](#12-如何运行)
 
-**AI Analytics Agent：**[模块说明](ai_agent/README.md)介绍冻结 deterministic baseline、独立 controlled LLM tool calling 与只读工具；[LLM provider](ai_agent/providers/openai_responses.py)、[离线 evaluator v2 说明](ai_agent/evals/llm_evaluation_v2_README.md)和[首次运行的探索性复评报告](ai_agent/evals/llm_evaluation_v2_report.md)提供实现与评估证据。V2 是事后建立的评估视图，其 case pass rate 不代表通用模型准确率。
+**AI Analytics Agent：**[模块说明](ai_agent/README.md)介绍冻结 deterministic baseline、独立 controlled tool calling 与只读工具；[LLM provider](ai_agent/providers/openai_responses.py)、[离线 evaluator v2 说明](ai_agent/evals/llm_evaluation_v2_README.md)和[首次运行的探索性复评报告](ai_agent/evals/llm_evaluation_v2_report.md)提供实现与评估证据。V2 是事后建立的评估视图，其 case pass rate 不代表通用模型准确率。
 
 ## 1. 业务背景与问题
 
@@ -314,3 +340,31 @@ PY
 ```
 
 也可在支持 Jupyter 的编辑器中从头执行。中文字体需使用 Noto Sans CJK SC、微软雅黑、苹方或 Notebook 支持的其他字体；缺少字体时会停止。输出图像写入 `reports/figures/`，Notebook 保留执行结果，GitHub 阅读不依赖本地数据库。
+
+## 本地 AI Copilot 展示界面
+
+轻量 Streamlit portfolio demo 直接调用现有 AI Analytics Agent，不是生产服务。
+从项目根目录启动（已有 DuckDB 数据库须就绪）：
+
+```bash
+source .venv/bin/activate
+python -m pip install -r requirements.txt -r requirements-ui.txt
+# 在当前 shell 安全设置 OPENAI_API_KEY 和 OPENAI_MODEL；不要写入源码。
+python -m streamlit run ai_agent/streamlit_app.py --server.address 127.0.0.1
+```
+
+也可运行 `bash scripts/start_agent_ui.sh`：使用项目 `.venv`，保留已有 `SSL_CERT_FILE`，否则选择可用的 CA 证书包。
+
+打开终端提示的本地地址。示例按钮填入问题，点击「开始分析」才调用模型；
+真实提交会产生 API 请求。页面展示回答、事实、分析、候选行动、注意事项，
+折叠区展示意图、工具名称、调用次数和 numeric grounding 结果。
+模型配置沿用环境变量；无密钥输入框、原始工具结果或自动 trace 保存。
+工具保持 DuckDB read-only 和现有调用预算、grounding 及数据边界校验。
+
+离线页面与兼容性测试（不调用真实 API）：
+
+```bash
+python -m unittest ai_agent.evals.test_streamlit_app -v
+```
+
+详见 [AI Agent 文档](ai_agent/README.md)。

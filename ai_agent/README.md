@@ -2,9 +2,25 @@
 
 在已验证的 SQL 01–09 与 DuckDB 数据层之上，提供可重复调用、只读、可追溯的运营问答接口，减少问答时重复计算指标与混用口径。没有重做清洗、分层或增长分析。
 
-冻结 baseline 是 **deterministic rule-based prototype**，由接收结构化工具结果的通用 Python reasoning rules 生成解释，不调用模型。独立 Controlled LLM Agent 使用 OpenAI Responses API 选择白名单工具并生成解释，已完成首次真实 37-case 运行；两种入口都复用同一只读数据工具。
+冻结 baseline 是 **deterministic rule-based prototype**，由接收结构化工具结果的通用 Python reasoning rules 生成解释，不调用模型。独立 AI Analytics Agent 使用 OpenAI Responses API 选择白名单工具并生成解释，已完成首次真实 37-case 运行；两种入口都复用同一只读数据工具。
 
 阅读导航：[LLM 架构](#controlled-llm-agent独立入口) · [Provider 实现](providers/openai_responses.py) · [Evaluator v2 说明](evals/llm_evaluation_v2_README.md) · [Evaluator v2 报告](evals/llm_evaluation_v2_report.md)。
+
+## AI Analytics Agent / Copilot 展示链路
+
+```mermaid
+flowchart LR
+    U[User] --> P[Streamlit / CLI]
+    P --> A[Controlled LLM Agent]
+    A --> T[Whitelisted Read-only Tools]
+    T --> D[DuckDB / SQL Results]
+    D --> V[Numeric Grounding + Boundary Checks]
+    V --> F[Final Answer]
+```
+
+Streamlit 只是 presentation layer，CLI 和 UI 复用同一个 `llm_agent.run`。
+controlled tool calling 仅访问白名单 read-only analytics tools，不允许 arbitrary SQL；
+API key 仅来自当前环境，不进入源码。这是 portfolio demo，不是 production system。
 
 ## 架构
 
@@ -70,7 +86,7 @@ python -m ai_agent.agent "哪些品类存在机会？" --top-n 3
 python -m ai_agent.evals.run_checks
 ```
 
-上述 deterministic CLI 仅需 DuckDB，不调用外部 API；LLM CLI 另需模型配置。项目未添加框架、SDK、RAG、MCP 或 UI，不在仓库保存凭据。已有数据库必须存在，不自动执行 pipeline 或重建数据库。CLI 回答成功返回 0，工具执行失败返回 1，unsupported / ambiguous 或参数解析失败返回 2；拒答与歧义仍输出结构化 JSON。
+上述 deterministic CLI 仅需 DuckDB，不调用外部 API；LLM CLI 另需模型配置。Agent 核心未添加框架、SDK、RAG 或 MCP；可选 Streamlit UI 仅用于本地展示，不在仓库保存凭据。已有数据库必须存在，不自动执行 pipeline 或重建数据库。CLI 回答成功返回 0，工具执行失败返回 1，unsupported / ambiguous 或参数解析失败返回 2；拒答与歧义仍输出结构化 JSON。
 
 ## Evaluation
 
@@ -80,7 +96,7 @@ python -m ai_agent.evals.run_checks
 python -m ai_agent.evals.run_evaluation
 ```
 
-评估意图、实际工具调用、状态、冻结数值、必要事实、数据边界与禁断言，报告真实失败；有失败时进程返回非零。详见 [Evaluation 说明](evals/README.md) 和 [运行报告](evals/evaluation_report.md)。独立 LLM Tool Calling 使用同一问题集保留 legacy 严格成绩，并以 v2 单独分析多意图集合、工具选择、numeric grounding 与问题专属边界；新增轻量 numeric grounding 独立核验来源路径、difference / pct_change、统计设置与展示格式；仍不全面理解单位语义或每句话的因果含义。
+评估意图、实际工具调用、状态、冻结数值、必要事实、数据边界与禁断言，报告真实失败；有失败时进程返回非零。详见 [Evaluation 说明](evals/README.md) 和 [运行报告](evals/evaluation_report.md)。独立 controlled tool calling 使用同一问题集保留 legacy 严格成绩，并以 v2 单独分析多意图集合、工具选择、numeric grounding 与问题专属边界；新增轻量 numeric grounding 独立核验来源路径、difference / pct_change、统计设置与展示格式；仍不全面理解单位语义或每句话的因果含义。
 
 本轮 explanation 改进使 Overall Pass 从 30/37（81.08%）升到 37/37（100%），原 12 个失败路径、16 个评估器自检和 13 个 CLI 回归均通过。新增 15 个反事实 reasoning / grounding tests 验证结论随数据变化、拒绝无来源或伪造数字。expected facts、forbidden claims 和五个工具查询未改变。100% 仅适用于冻结测试集，不代表任意措辞或业务问题都正确。
 
@@ -146,3 +162,27 @@ LLM numeric audit 支持明确下降方向的 presentation：正文“下降 X p
 Numeric grounding 100% 不代表所有回答在语义上都完全正确；forbidden claim 0 hits 只代表当前规则没有命中违规表述。V2 仍保留 Cart 诊断缺少 growth 工具、GMV 拒答时额外查询平台、匿名品类问题状态不符三项失败。数字展示的缺失或精度不足单独报告，不等同于数字幻觉。
 
 详见 [v2 说明](evals/llm_evaluation_v2_README.md) 与 [v2 报告](evals/llm_evaluation_v2_report.md)。真实 traces 与动态 results 保留本地并被 Git 忽略，公开报告仅保留可审阅的评估摘要。
+
+## 可选 Streamlit portfolio demo
+
+从项目根目录安装 `python -m pip install -r requirements-ui.txt`，然后运行：
+
+```bash
+python -m streamlit run ai_agent/streamlit_app.py --server.address 127.0.0.1
+```
+
+已有项目依赖和 DuckDB 数据库须就绪；当前环境设置 `OPENAI_API_KEY` 与
+`OPENAI_MODEL`，沿用现有 provider 配置，不读取 Streamlit secrets 或 .env。
+示例按钮只填入问题，提交后直接调用 `llm_agent.run`，与 CLI 一样启用一次
+最终回答修正。每次提交建立独立 provider，不缓存或保存原始 trace。
+仅在当前浏览器会话保留最近的展示结果，普通页面重跑不重复调用模型。
+
+页面默认展示 answer、facts、analysis、candidate_actions、caveats；
+「查看分析过程」默认折叠，仅列出 detected intents、selected tools、tool call count
+和 numeric grounding 是否通过。错误显示固定摘要，不显示底层异常或内部 JSON。
+这是本地作品展示界面，没有生产部署、认证或并发资源管理。
+`llm_agent` 公共接口与 CLI 保持原样；SQL、只读工具、baseline、Golden 和 grounding 未修改。
+
+离线测试：`python -m unittest ai_agent.evals.test_streamlit_app -v`。
+
+便捷启动：从项目根目录运行 `bash scripts/start_agent_ui.sh`。脚本使用 `.venv`，检查环境配置并选择 CA 证书包；已有 `SSL_CERT_FILE` 保留，不读取个人 Keychain。

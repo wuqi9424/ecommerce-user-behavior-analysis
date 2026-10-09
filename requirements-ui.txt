@@ -1,0 +1,2 @@
+# Optional local portfolio UI; install alongside the existing project dependencies.
+streamlit>=1.45,<2
